@@ -28,7 +28,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return userModel.toEntity();
     } catch (e) {
       AppLogger(
-        'Login failed in repository',
+        'Login failed in repository: $e',
       );
       rethrow;
     }
@@ -66,18 +66,16 @@ class AuthRepositoryImpl implements AuthRepository {
   
   @override
   Future<String> requestOTP({required String nip}) {
-    // TODO: implement requestOTP
-    throw UnimplementedError();
+    return remoteDatasource.forgotPassword(nip);
   }
 
   @override
-  Future<String> verifyOTP( String nip, String otp) async {
-
-  throw UnimplementedError();
-}
+  Future<String> verifyOTP(String nip, String otp) async {
+    return remoteDatasource.verifyOTP(nip, otp);
+  }
   @override
-  Future<String> resetPassword({required String nip, required String newPassword}) async {
-
-    throw UnimplementedError();
+  Future<String> resetPassword({required String nip, required String newPassword, required String otp}) async {
+    await remoteDatasource.resetPassword(nip, newPassword, otp);
+    return 'Kata sandi berhasil diubah, Silahkan login kembali.';
   }
 }

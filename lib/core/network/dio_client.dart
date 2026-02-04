@@ -17,8 +17,8 @@ class DioClient {
 DioClient(this._dio, this.authLocalDataSource){
     _dio.options = BaseOptions(
       baseUrl: ApiConstants.baseUrl,
-      connectTimeout: const Duration(milliseconds: 30),
-      receiveTimeout: const Duration(milliseconds: 30),
+      connectTimeout: ApiConstants.connectTimeout,
+      receiveTimeout: ApiConstants.receiveTimeout,
       responseType: ResponseType.json,
       headers:{
         'Content-Type': 'application/json',

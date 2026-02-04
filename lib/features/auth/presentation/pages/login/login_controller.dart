@@ -39,10 +39,13 @@ class LoginController extends Controller {
 
       errorMessage = null;
       refreshUI();
+      
+      print('Login Success: Navigating to /dashboard');
       Navigator.of(getContext()).pushReplacementNamed('/dashboard');
     };
 
     _presenter.onLoginError = (e) {
+      print('Login Error: $e');
       isLoading = false;
       // Clean up error message prefix if present
       String cleanMessage = e.toString();

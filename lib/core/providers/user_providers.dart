@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/auth/domain/entities/user.dart';
 
 class UserState {
@@ -26,8 +27,26 @@ class UserNotifier extends StateNotifier<UserState> {
     state = const UserState();
   }
 
+
+Future<void> logout() async {
+    try {
+      // 1. Reset state menjadi UserState() (currentUser jadi null, isLoading jadi false)
+      clearUser();
+
+      // 2. Hapus token dari SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('auth_token'); // Sesuaikan key 'auth_token' dengan milikmu
+      
+      print("Logout berhasil: State direset dan token dihapus.");
+    } catch (e) {
+      print("Error saat logout: $e");
+      rethrow; 
+    }
+  }
+
   bool get isLoggedIn => state.currentUser != null;
 }
+  
 
 final userProvider = StateNotifierProvider<UserNotifier, UserState>((ref) {
   return UserNotifier();

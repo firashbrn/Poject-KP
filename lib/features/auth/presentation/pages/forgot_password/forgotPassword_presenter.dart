@@ -23,9 +23,9 @@ class ForgotpasswordPresenter extends Presenter {
     _verifyOtpUsecase.execute(_VerifyOtpObserver(this), VerifyOtpParams(nip, otp));
   }
 
-  void resetPassword(String nip, String newPassword) {
+  void resetPassword(String nip, String newPassword, String otp) {
     _resetPasswordUsecase.execute(
-        _ResetPasswordObserver(this), ResetPasswordParams(nip, newPassword));
+        _ResetPasswordObserver(this), ResetPasswordParams(nip, newPassword, otp));
   }
 
   @override

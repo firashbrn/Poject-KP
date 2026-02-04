@@ -19,15 +19,17 @@ class LoginView extends CleanView {
 class LoginViewState extends CleanViewState<LoginView, LoginController> {
   LoginViewState() : super(sl<LoginController>());
 
-  final TextEditingController nipController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  // Removed local controllers to use the ones from LoginController
+
 
   @override
   Widget get view {
     return Scaffold(
       key: globalKey,
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
         child: Column(
           children:[
             ControlledWidgetBuilder<LoginController>(
@@ -45,15 +47,24 @@ class LoginViewState extends CleanViewState<LoginView, LoginController> {
               ),
               const SizedBox(height: 32),
               CustomTextField(
-                controller: nipController,
+                controller: controller.nipController,
                 label: 'Nomor Induk Pegawai',
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 32),
+              if (controller.errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Text(
+                    controller.errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               CustomPasswordField(
-                controller: passwordController,
+                controller: controller.passwordController,
                 label: 'Kata sandi',
-                validator: Validators.validatePassword,
+                validator: Validators.validateSimplePassword,
               ),
               const SizedBox(height: 32),
               CustomButton(
@@ -72,7 +83,9 @@ class LoginViewState extends CleanViewState<LoginView, LoginController> {
             ),
           ],
         ),
-    )
+          ),
+        ),
+      ),
     );
     }
   }

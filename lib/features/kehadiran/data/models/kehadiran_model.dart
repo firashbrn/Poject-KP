@@ -1,28 +1,19 @@
-import 'package:equatable/equatable.dart';
+import '../../domain/entities/kehadiran.dart';
 
-class AttendanceModel extends Equatable {
-  final String status;
-  final String checkInTime;
-  final String? checkOutTime;
-  final double? distance;
-  final String? date;
-  final String? scheduledCheckInTime;
-  final String? scheduledCheckOutTime;
-
+class AttendanceModel extends Attendance {
   const AttendanceModel({
-    required this.status,
-    required this.checkInTime,
-    this.checkOutTime,
-    this.distance,
-    this.date,
-    this.scheduledCheckInTime,
-    this.scheduledCheckOutTime,
+    required super.status,
+    required super.checkInTime,
+    super.checkOutTime,
+    super.distance,
+    super.date,
+    super.scheduledCheckInTime,
+    super.scheduledCheckOutTime,
   });
 
   factory AttendanceModel.fromJson(Map<String, dynamic> json) {
     return AttendanceModel(
       status: json['status'] ?? json['status_masuk'] ?? 'UNKNOWN',
-      // Check for multiple possible keys for time
       checkInTime:
           json['jam_masuk_real'] ?? json['waktu_masuk'] ?? json['time'] ?? '-',
       checkOutTime:
@@ -31,13 +22,11 @@ class AttendanceModel extends Equatable {
           json['check_out_time'],
       distance: (json['jarak'] as num?)?.toDouble(),
       date: json['tanggal'],
-      // Parse Scheduled Times (Try flat, then nested)
       scheduledCheckInTime:
           json['jam_masuk'] ??
           json['jam_masuk_jadwal'] ??
           json['shift']?['jam_masuk'] ??
           json['jadwal']?['jam_masuk'],
-
       scheduledCheckOutTime:
           json['jam_pulang'] ??
           json['jam_pulang_jadwal'] ??
@@ -45,31 +34,14 @@ class AttendanceModel extends Equatable {
           json['jadwal']?['jam_pulang'],
     );
   }
-
-  @override
-  List<Object?> get props => [
-    status,
-    checkInTime,
-    checkOutTime,
-    distance,
-    date,
-    scheduledCheckInTime,
-    scheduledCheckOutTime,
-  ];
 }
 
-class AttendanceRecapModel extends Equatable {
-  final int present;
-  final int late;
-  final int permission;
-  final int leave;
-  // final List<AttendanceModel> details;
-
+class AttendanceRecapModel extends AttendanceRecap {
   const AttendanceRecapModel({
-    required this.present,
-    required this.late,
-    required this.permission,
-    required this.leave,
+    required super.present,
+    required super.late,
+    required super.permission,
+    required super.leave,
   });
 
   factory AttendanceRecapModel.fromJson(Map<String, dynamic> json) {
@@ -80,7 +52,4 @@ class AttendanceRecapModel extends Equatable {
       leave: json['cuti'] ?? 0,
     );
   }
-
-  @override
-  List<Object?> get props => [present, late, permission, leave];
 }

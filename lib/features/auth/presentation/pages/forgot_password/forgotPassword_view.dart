@@ -53,14 +53,55 @@ class _ForgotpasswordViewState extends CleanViewState<ForgotpasswordView, Forgot
   }
 
   Widget _buildNipSection(ForgotpasswordController controller) {
-    return CustomTextField(controller: controller.nipController, label: 'Masukkan NIP');
+    return Column(
+      children: [
+         if (controller.errorMessage != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Text(
+              controller.errorMessage!,
+              style: const TextStyle(color: Colors.red),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        CustomTextField(controller: controller.nipController, label: 'Masukkan NIP'),
+      ],
+    );
   }
 
   Widget _buildOtpSection(ForgotpasswordController controller) {
-    return CustomTextField(controller: controller.otpController, label: 'Masukkan Kode OTP');
+    return Column(
+      children: [
+         if (controller.errorMessage != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Text(
+              controller.errorMessage!,
+              style: const TextStyle(color: Colors.red),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        CustomTextField(controller: controller.otpController, label: 'Masukkan Kode OTP'),
+      ],
+    );
   }
 
   Widget _buildResetSection(ForgotpasswordController controller) {
-    return CustomPasswordField(controller: controller.newpasswordController, label: 'Password Baru');
+    return Column(
+      children: [
+        if (controller.errorMessage != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Text(
+              controller.errorMessage!,
+              style: const TextStyle(color: Colors.red),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        CustomPasswordField(controller: controller.newpasswordController, label: 'Password Baru'),
+        const SizedBox(height: 16),
+        CustomPasswordField(controller: controller.confirmPasswordController, label: 'Konfirmasi Password Baru'),
+      ],
+    );
   }
 }

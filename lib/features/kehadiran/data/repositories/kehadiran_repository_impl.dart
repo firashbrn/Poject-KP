@@ -1,45 +1,46 @@
+import '../../../../core/errors/exceptions.dart';
+import '../../data/datasources/kehadiran_remote_datasource.dart';
+import '../../domain/entities/kehadiran.dart';
+import '../../domain/repositories/kehadiran_repository.dart';
 
-import '../datasources/kehadiran_remote_datasource.dart';
-import '../models/kehadiran_model.dart';
-
-class AttendanceRepositoryImpl implements AttendanceRepository {
+class KehadiranRepositoryImpl implements KehadiranRepository {
   final AttendanceRemoteDataSource remoteDataSource;
 
-  AttendanceRepositoryImpl({required this.remoteDataSource});
+  KehadiranRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<AttendanceModel> checkIn(double lat, double long) async {
+  Future<Attendance> checkIn(double lat, double long) async {
     try {
       return await remoteDataSource.checkIn(lat, long);
     } catch (e) {
-      rethrow;
+      throw ServerException(e.toString());
     }
   }
 
   @override
-  Future<AttendanceModel> checkOut(double lat, double long) async {
+  Future<Attendance> checkOut(double lat, double long) async {
     try {
       return await remoteDataSource.checkOut(lat, long);
     } catch (e) {
-      rethrow;
+      throw ServerException(e.toString());
     }
   }
 
   @override
-  Future<List<AttendanceModel>> getHistory() async {
+  Future<List<Attendance>> getHistory() async {
     try {
       return await remoteDataSource.getHistory();
     } catch (e) {
-      rethrow;
+      throw ServerException(e.toString());
     }
   }
 
   @override
-  Future<AttendanceRecapModel> getRecap(String month, String year) async {
+  Future<AttendanceRecap> getRecap(String month, String year) async {
     try {
       return await remoteDataSource.getRecap(month, year);
     } catch (e) {
-      rethrow;
+      throw ServerException(e.toString());
     }
   }
 
@@ -48,7 +49,7 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
     try {
       return await remoteDataSource.getTodayStatus();
     } catch (e) {
-      rethrow;
+      throw ServerException(e.toString());
     }
   }
 }

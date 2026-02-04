@@ -26,12 +26,7 @@ abstract class AuthRepository {
     String otp,
   );
 
-  Future<String> resetPassword({
-    required String nip,
-    required String newPassword,
-  });
-
-
+  Future<String> resetPassword({required String nip, required String newPassword, required String otp});
 
   Future<bool> isAuthenticated();
 

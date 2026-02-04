@@ -29,5 +29,13 @@ class Validators {
     }
     return null;
   }
+  
+  // Simple Validate Password (for Login)
+  static String? validateSimplePassword(String? value) {
+     if (value == null || value.isEmpty) {
+      return 'Kata Sandi tidak boleh kosong';
+    }
+    return null;
+  }
 
 }

@@ -20,8 +20,9 @@ class ResetPasswordUsecase extends UseCase<String, ResetPasswordParams>{
         AppLogger('Attempting to reset password for NIP: ${params.nip}');
 
       await _authRepository.resetPassword(
-          nip : params.nip, 
-          newPassword: params.newPassword
+          nip : params.nip,
+          newPassword: params.newPassword,
+          otp: params.otp,
         );
         
         AppLogger('Password berhasil diperbaharui');
@@ -40,7 +41,7 @@ class ResetPasswordUsecase extends UseCase<String, ResetPasswordParams>{
 
   class ResetPasswordParams {
     final String nip;
+    final String otp;
     final String newPassword;
-
-    ResetPasswordParams(this.nip, this.newPassword);
+    ResetPasswordParams(this.nip, this.newPassword, this.otp);
   }

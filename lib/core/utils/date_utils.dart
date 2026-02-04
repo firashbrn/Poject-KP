@@ -3,6 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DateUtils {
+
+  static String formatDate(DateTime date) {
+    return DateFormat('EEEE, d MMM yyyy', 'id_ID').format(date);
+  }
+
+  /// Format untuk Jam Realtime (Contoh: 08:30)
+  static String formatTime(DateTime date) {
+    return DateFormat('HH:mm', 'id_ID').format(date);
+  }
+  
   /// Cek apakah tanggal adalah hari ini
   static bool isToday(DateTime date) {
     final now = DateTime.now();

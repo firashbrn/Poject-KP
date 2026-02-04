@@ -15,7 +15,7 @@ abstract class AuthRemoteDatasource {
 
   Future<void> changePassword(String oldPassword, String newPassword);
   Future<String> forgotPassword(String nip);
-  Future<void> resetPassword(String newPassword);
+  Future<void> resetPassword(String nip, String newPassword, String otp);
   Future<String> verifyOTP(String nip, String otp);
   Future<UserModel> getProfile();
   Future<UserModel> refreshToken(String refreshToken);
@@ -78,10 +78,10 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
-          errorMessage = 'Koneksi timeout. Coba lagi.';
+          errorMessage = 'Koneksi timeout (Server lambat). Coba lagi.';
           break;
         case DioExceptionType.connectionError:
-          errorMessage = 'Tidak ada koneksi internet.';
+          errorMessage = 'Tidak dapat terhubung ke server. Pastikan IP benar.';
           break;
         case DioExceptionType.badResponse:
           final statusCode = e.response?.statusCode;
@@ -156,8 +156,21 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       } else {
         throw ServerException('Gagal mengirim email lupa kata sandi.');
       }
+    } on DioException catch (e) {
+      String errorMessage = 'Terjadi kesalahan jaringan.';
+      if (e.type == DioExceptionType.badResponse) {
+        final statusCode = e.response?.statusCode;
+        if (statusCode == 404) {
+          errorMessage = 'NIP tidak ditemukan.';
+        } else if (statusCode == 400) {
+           errorMessage = e.response?.data['message'] ?? 'Format NIP salah atau permintaan tidak valid.';
+        } else {
+           errorMessage = e.response?.data['message'] ?? 'Terjadi kesalahan server.';
+        }
+      }
+      throw ServerException(errorMessage);
     } catch (e) {
-      throw ServerException('Terjadi kesalahan: ${e.toString()}');
+      throw ServerException('Terjadi kesalahan tidak terduga.');
     }
 
   }
@@ -203,12 +216,14 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   }
   
   @override
-  Future<void> resetPassword(String newPassword)async {
+  Future<void> resetPassword(String nip, String newPassword, String otp) async {
    try{
     final response = await apiClient.post(
       ApiConstants.resetPassword,
       data: {
+        'nip': nip,
         'new_password': newPassword,
+        'otp': otp, // Added OTP to payload
       },
     );
     if (response.statusCode != 200) {
@@ -253,8 +268,14 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
         throw ServerException('Gagal memverifikasi OTP.');
       }
 
-    }catch(e){
-      throw ServerException('Terjadi kesalahan: ${e.toString()}');
+    } on DioException catch (e) {
+       String errorMessage = 'Kode OTP Salah atau Kadaluarsa.';
+       if (e.response?.data != null && e.response?.data is Map) {
+         errorMessage = e.response?.data['message'] ?? errorMessage;
+       }
+       throw ServerException(errorMessage);
+    } catch (e) {
+      throw ServerException('Gagal memverifikasi OTP.');
     }
   }
   
