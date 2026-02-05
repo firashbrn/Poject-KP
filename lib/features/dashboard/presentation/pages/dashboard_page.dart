@@ -32,24 +32,18 @@ class _DashboardPageState extends CleanViewState<DashboardPage, DashboardControl
           body: Stack(
             children: [
               // 1. Background
+              // 1. Background
               Positioned.fill(
-                child: Container(
-                  color: const Color(0xFF1A1A2E), // Fallback if no image
-                  // Add Image.asset here if available
+                child: Image.asset(
+                  'assets/images/balaikotabaru.png',
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
                 ),
               ),
                Positioned.fill(
                 child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.black.withValues(alpha: 0.3),
-                        Colors.black.withValues(alpha: 0.7),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
+                  color: Colors.black.withValues(alpha: 0.20),
                 ),
               ),
 
@@ -109,25 +103,13 @@ class _DashboardPageState extends CleanViewState<DashboardPage, DashboardControl
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
                                                       const SizedBox(height: 20),
-                                                      const ActionStatusCard(),
+                                                      ActionStatusCard(
+                                                        locationName: controller.currentAddress,
+                                                      ),
                                                       const SizedBox(height: 20),
                                                       AttendanceActions(
-                                                        onCheckIn: (lat, long) async {
-                                                           controller.checkIn(lat, long);
-                                                           await Future.delayed(const Duration(seconds: 1));
-                                                           if (controller.todayAttendance != null) {
-                                                              return controller.todayAttendance!;
-                                                           }
-                                                           throw Exception('CheckIn In Progress'); 
-                                                        },
-                                                        onCheckOut: (lat, long) async {
-                                                          controller.checkOut(lat, long);
-                                                           await Future.delayed(const Duration(seconds: 1));
-                                                           if (controller.todayAttendance != null) {
-                                                              return controller.todayAttendance!;
-                                                           }
-                                                            throw Exception('CheckOut In Progress');
-                                                        },
+                                                        onCheckIn: controller.checkIn,
+                                                        onCheckOut: controller.checkOut,
                                                         initialData: controller.todayAttendance,
                                                       ),
                                                       const SizedBox(height: 40),

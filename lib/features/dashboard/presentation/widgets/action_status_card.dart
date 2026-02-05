@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/utils/date_utils.dart' as du;
 
 class ActionStatusCard extends StatefulWidget {
-  const ActionStatusCard({super.key});
+  final String locationName;
+  const ActionStatusCard({super.key, required this.locationName});
 
   @override
   State<ActionStatusCard> createState() => _ActionStatusCardState();
@@ -78,7 +79,7 @@ class _ActionStatusCardState extends State<ActionStatusCard> {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -88,19 +89,24 @@ class _ActionStatusCardState extends State<ActionStatusCard> {
               ),
             ),
             const SizedBox(width: 8),
-            const Text(
-              "Kantor Walikota",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    color: Colors.black26,
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                  ),
-                ],
+            Flexible(
+              child: Text(
+                widget.locationName,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

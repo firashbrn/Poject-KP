@@ -2,7 +2,7 @@ class ApiConstants {
   // Base URL
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://192.168.1.27:3000',
+    defaultValue: 'http://10.100.94.70:3000',
   );
 
   //ENDPOINTS

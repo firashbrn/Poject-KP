@@ -4,8 +4,8 @@ import '../../../kehadiran/domain/entities/kehadiran.dart';
 
 
 class AttendanceActions extends StatefulWidget {
-  final Future<Attendance> Function(double lat, double long) onCheckIn;
-  final Future<Attendance> Function(double lat, double long) onCheckOut;
+  final VoidCallback onCheckIn;
+  final VoidCallback onCheckOut;
   final Attendance? initialData;
 
   const AttendanceActions({
@@ -80,44 +80,14 @@ class _AttendanceActionsState extends State<AttendanceActions> {
 
     final bool isCheckingIn = !_isClockedIn;
 
-    setState(() => _isLoading = true);
-
-    try {
-      // Metric: Lat/Long dummy for now, usually replaced by Geolocation
-      final double lat = 0.0;
-      final double long = 0.0;
-
-      Attendance result;
-
-      if (isCheckingIn) {
-        result = await widget.onCheckIn(lat, long);
-      } else {
-        result = await widget.onCheckOut(lat, long);
-      }
-
-      if (!mounted) return;
-
-      final now = DateTime.now();
-      final String formattedTime =
-          "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
-
-      setState(() {
-        if (isCheckingIn) {
-          _isClockedIn = true;
-          _clockInTime = formattedTime; // Or use result.checkInTime
-        } else {
-          _isClockedIn = false;
-          _clockOutTime = formattedTime; // Or use result.checkOutTime
-          _isAttendanceComplete = true;
-        }
-      });
-    } catch (e) {
-      // Error handled by Controller usually, but we catch locally to stop loading
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+    // Trigger Controller Action
+    if (isCheckingIn) {
+      widget.onCheckIn();
+    } else {
+      widget.onCheckOut();
     }
+    
+    // UI Updates are handled via didUpdateWidget when controller state changes
   }
 
   @override

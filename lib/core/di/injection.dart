@@ -1,6 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import '../../core/device/repositories/gps_device.dart';
+import '../../core/device/repositories/gps_device_impl.dart';
+import '../../core/device/repositories/camera_device.dart';
+import '../../core/device/repositories/camera_device_impl.dart';
 
 import '../../features/auth/data/datasources/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
@@ -62,6 +66,10 @@ Future<void> init() async {
   // 0. External
   sl.registerLazySingleton(() => Dio());
   sl.registerLazySingleton(() => const FlutterSecureStorage());
+  
+  // Device
+  sl.registerLazySingleton<GpsDevice>(() => GpsDeviceImpl());
+  sl.registerLazySingleton<CameraDevice>(() => CameraDeviceImpl());
 
   // 1. Network & API Client
   sl.registerLazySingleton(() => DioClient(sl<Dio>(), sl<AuthLocalDataSource>()));
@@ -127,7 +135,12 @@ sl.registerFactory(() => ForgotpasswordController(sl()));
   sl.registerLazySingleton<BannerRepository>(
       () => BannerRepositoryImpl(remoteDataSource: sl<BannerRemoteDataSource>()));
   sl.registerLazySingleton(() => GetBannersUseCase(sl<BannerRepository>()));
-  sl.registerFactory(() => DashboardController(sl<DashboardPresenter>()));
+
+  sl.registerFactory(() => DashboardController(
+    sl<DashboardPresenter>(),
+    sl<GpsDevice>(),
+    sl<CameraDevice>(),
+  ));
 
   // Pengajuan Cuti
   sl.registerLazySingleton<CutiRemoteDataSource>(() => CutiRemoteDataSourceImpl(sl<ApiClient>()));
